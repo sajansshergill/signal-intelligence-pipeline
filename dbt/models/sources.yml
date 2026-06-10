@@ -1,0 +1,39 @@
+# dbt/models/sources.yml
+version: 2
+
+sources:
+  - name: threat_signals
+    database: threat_signals
+    schema: main
+    tables:
+      - name: raw_signals
+        description: "Raw ingested signals from all scrapers via Kafka consumer"
+        columns:
+          - name: content_hash
+            tests: [not_null, unique]
+          - name: source
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['reddit', 'reddit_comment', 'hackernews', 'hackernews_algolia', 'arxiv', 'nvd_cve']
+
+      - name: processed_signals
+        description: "Processed signals with classification and severity scores"
+        columns:
+          - name: content_hash
+            tests: [not_null, unique]
+          - name: primary_category
+            tests:
+              - accepted_values:
+                  values:
+                    - jailbreak
+                    - prompt_injection
+                    - data_poisoning
+                    - model_extraction
+                    - adversarial_inputs
+                    - supply_chain
+                    - infrastructure
+                    - policy_evasion
+                    - privacy_attack
+                    - alignment_failure
+                    - unclassified

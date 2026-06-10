@@ -1,0 +1,79 @@
+# dbt/models/schema.yml
+version: 2
+
+models:
+  - name: bronze_reddit_posts
+    description: "Raw Reddit posts and comments filtered for threat relevance"
+    columns:
+      - name: content_hash
+        tests: [not_null, unique]
+      - name: source
+        tests: [not_null]
+      - name: body
+        tests: [not_null]
+
+  - name: bronze_hn_stories
+    description: "Raw HackerNews stories filtered for threat relevance"
+    columns:
+      - name: content_hash
+        tests: [not_null, unique]
+
+  - name: bronze_arxiv_papers
+    description: "Raw arXiv abstracts filtered for adversarial ML topics"
+    columns:
+      - name: content_hash
+        tests: [not_null, unique]
+      - name: arxiv_id
+        tests: [not_null, unique]
+
+  - name: bronze_cve_records
+    description: "Raw NVD CVE records filtered for AI/ML infrastructure"
+    columns:
+      - name: content_hash
+        tests: [not_null, unique]
+      - name: cve_id
+        tests: [not_null, unique]
+
+  - name: silver_threat_signals
+    description: "Unified deduplicated classified signals across all sources"
+    columns:
+      - name: content_hash
+        tests: [not_null, unique]
+      - name: primary_category
+        tests: [not_null]
+      - name: severity_score
+        tests: [not_null]
+      - name: signal_type
+        tests:
+          - accepted_values:
+              values: ['social', 'research', 'vulnerability']
+
+  - name: gold_threat_signals
+    description: "Final enriched intelligence — served to API and dashboard"
+    columns:
+      - name: content_hash
+        tests: [not_null, unique]
+      - name: severity_score
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10
+
+  - name: gold_emerging_threats
+    description: "Signals with velocity spike in last 7 days"
+    columns:
+      - name: content_hash
+        tests: [not_null]
+
+  - name: gold_severity_index
+    description: "Aggregated severity by threat category"
+    columns:
+      - name: primary_category
+        tests: [not_null, unique]
+
+  - name: gold_entity_risk_map
+    description: "Entity mention frequency weighted by severity"
+    columns:
+      - name: entity
+        tests: [not_null]

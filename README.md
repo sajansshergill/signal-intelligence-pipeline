@@ -148,7 +148,7 @@ Signals are classified into the following categories:
 
 ```
 ai-threat-signal-pipeline/
-├── scrapers/
+├── scrappers/
 │   ├── reddit_scraper.py          # PRAW-based Reddit ingestion
 │   ├── hn_scraper.py              # HackerNews API scraper
 │   ├── arxiv_scraper.py           # arXiv RSS feed parser
@@ -215,6 +215,9 @@ pip install -r requirements.txt
 cp .env.example .env
 # Add REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT
 
+# Classify and score raw ingested signals
+python processing/classifier.py
+
 # Run dbt transformations
 cd dbt && dbt deps && dbt run && dbt test
 
@@ -228,10 +231,10 @@ streamlit run dashboard/app.py
 ### Run scrapers manually
 
 ```bash
-python scrapers/reddit_scraper.py
-python scrapers/hn_scraper.py
-python scrapers/arxiv_scraper.py
-python scrapers/cve_scraper.py
+python scrappers/reddit_scraper.py
+python scrappers/hn_scraper.py
+python scrappers/arxiv_scraper.py
+python scrappers/cve_scraper.py
 ```
 
 ---

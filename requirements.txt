@@ -1,0 +1,16 @@
+beautifulsoup4
+confluent-kafka
+dbt-core
+dbt-duckdb
+duckdb
+fastapi
+feedparser
+pandas
+plotly
+praw
+pydantic
+pytest
+python-dotenv
+requests
+streamlit
+uvicorn

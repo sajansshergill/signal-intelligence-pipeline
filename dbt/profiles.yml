@@ -1,0 +1,8 @@
+threat_signals:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../data/threat_signals.duckdb
+      schema: main
+      threads: 4
